@@ -2,9 +2,53 @@
 
 if [ ! -d .venv ]; then
     python3 -m venv .venv
+    source .venv/bin/activate
+    pip3 install -r requirements.txt
+    pip3 install git+https://github.com/hiive/mlrose.git
+else
+    source .venv/bin/activate
 fi
-source .venv/bin/activate
-pip install -r requirements.txt
-pip install git+https://github.com/hiive/mlrose.git
 
-python3 assignment.py
+declare -a pids=()
+
+cleanup() {
+    echo "===========================KILL==================================="
+    echo "Received Keyboard Interrupt. Cleaning up..."
+
+    for pid in "${pids[@]}"; do
+        kill -s SIGKILL "$pid" 2>&1
+        echo "Killed subprocess with PID $pid."
+    done
+    
+    exit 1
+}
+
+trap cleanup SIGINT
+
+# Define the range of experiments and algorithms
+experiment_range=(1 2 3)
+algorithms=("Random_Hill" "Simulated_Annealing" "Genetic_Algorithm" "MIMIC")
+i=0
+# Loop over experiments and algorithms
+for experiment in "${experiment_range[@]}"; do
+    for algorithm in "${algorithms[@]}"; do
+        # Run the Python script with the current experiment and algorithm
+        python3 assignment.py -e "$experiment" -a "$algorithm" > run${i}.log & 
+        pid=$!
+        pids+=("$pid")
+        ((i++))
+    done
+done
+
+wait
+
+combined_contents=""
+
+# Concatenate log files in numerical order
+for file in $(ls -v run*.log); do
+    combined_contents+=$(cat "$file")
+    combined_contents+="\n=====================\n"  # Add divider after each file
+done
+rm -rf result
+echo -e "$combined_contents" > "result"
+rm -rf run*.log
