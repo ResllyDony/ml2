@@ -35,10 +35,10 @@ def main():
 
     # Define optimization algorithms
     algorithms = {
-        "Random_Hill": mlrose.random_hill_climb,
-        "Simulated_Annealing": mlrose.simulated_annealing,
-        "Genetic_Algorithm": mlrose.genetic_alg,
-        "MIMIC": mlrose.mimic
+        "rhc": (mlrose.RHCRunner, {'experiment_name':'tst', 'seed': 69, 'iteration_list':[100, 500, 1000], 'restart_list':[0, 10, 50]}),
+        "sa": [mlrose.SARunner, {'experiment_name':'tst', 'seed': 69, 'iteration_list':[100, 500, 1000], 'max_attempts':1000, 'temperature_list':[1e10, 1, 10, 50, 100, 250, 500, 1000, 2500, 5000, 10000]}],
+        "ga": [mlrose.GARunner, {'population_sizes': [100, 200], 'mutation_rates':[0.1, 0.3, 0.2], 'iteration_list':[100,300,500, 1000], 'seed': 69, 'experiment_name': 'tst'}],
+        "mimic": [mlrose.MIMICRunner, {'population_sizes': [200, 200], 'keep_percent_list':[0.1, 0.15, 0.5,0.65], 'iteration_list':[100,300,500, 500, 1000], 'seed': 69, 'experiment_name': 'tst', 'use_fast_mimic':True}]
     }
 
     #dataset prep
@@ -60,11 +60,13 @@ def main():
     # Define the discretized fitness function
     def discretized_fitness_function(weights):
         # Discretize the weights
-        discretized_weights = np.array(weights)
-        for i in range(len(weights)):
-            discretized_weights[i] = min(weights_discrete_values, key=lambda x: abs(x - weights[i]))
+        normalized_weights = np.array(weights)
+        min_weight = -0.5
+        max_weight = 0.5
+
+        normalized_weights = min_weight + (max_weight - min_weight) * (normalized_weights / 15)
                                         
-        nn.fitted_weights = discretized_weights
+        nn.fitted_weights = normalized_weights
         nn.node_list = node_list
         nn.output_activation = mlrose.sigmoid
     
@@ -86,7 +88,6 @@ def main():
                                  nn.bias, nn.is_classifier,
                                  learning_rate=nn.learning_rate)
     if args.algo=='MIMIC':
-        weights_discrete_values = [0, 0.1, 0.2, 0.3, 0.4, 0.5]
         problem = mlrose.DiscreteOpt(length=num_nodes, fitness_fn=mlrose.CustomFitness(discretized_fitness_function),
                              maximize=False, max_val=15)
     else:
@@ -95,13 +96,18 @@ def main():
                                 max_val=nn.clip_max, step=nn.learning_rate)
     
     #run optimization with the requested algorithm
-    results = algorithms[args.algo](problem, max_attempts=10, max_iters=1000, random_state=69)
+    results = algorithms[args.algo][0](problem, **algorithms[args.algo][1])
     if len(results)==2:
         best_weights, current_loss = results
     else:
         best_weights, current_loss, _ = results
 
     #evaluate
+    if args.algo == 'MIMIC':
+        min_weight = -0.5
+        max_weight = 0.5
+
+        best_weights = min_weight + (max_weight - min_weight) * (best_weights / 15)
     nn.fitted_weights = best_weights
     nn.output_activation = fitness.get_output_activation()
     y_test_pred = nn.predict(X_test)

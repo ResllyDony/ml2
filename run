@@ -9,6 +9,11 @@ else
     source .venv/bin/activate
 fi
 
+combined_contents=""
+combined_file="results.out"
+
+rm -rf experiment*.log $combined_contents
+
 declare -a pids=()
 
 cleanup() {
@@ -27,7 +32,7 @@ trap cleanup SIGINT
 
 # Define the range of experiments and algorithms
 experiment_range=(1 2 3 4 5 6 7 8)
-algorithms=("Random_Hill" "Simulated_Annealing" "Genetic_Algorithm" "MIMIC")
+algorithms=("rhc" "sa" "ga" "mimic")
 i=0
 # Loop over experiments and algorithms
 for experiment in "${experiment_range[@]}"; do
@@ -42,9 +47,6 @@ done
 
 wait
 
-combined_contents=""
-combined_file="results.out"
-
 # Concatenate log files in numerical order
 # Concatenate log files in numerical order
 count=0
@@ -54,10 +56,10 @@ for file in $(ls -v experiment*.log); do
     
     # Check if the count is a multiple of 4
     if ((count % 4 == 0)); then
-        combined_contents+="\n=====================\n"  # Add divider after each file
+        combined_contents+="\n=====================================================================\n"  # Add divider after each file
     fi
     combined_contents+='\n'
 done
-rm -rf experiment*.log $combined_contents
+
 echo -e "$combined_contents" > $combined_file
 rm -rf experiment*.log

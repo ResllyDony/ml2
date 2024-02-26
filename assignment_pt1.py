@@ -7,7 +7,7 @@ import argparse
 def experiment1():
     '''Traveling Salesman Problem: Minimize'''
     # Create a random graph with 100 nodes
-    G = nx.random_geometric_graph(50, 0.5)
+    G = nx.random_geometric_graph(100, 0.5)
     # Extract node coordinates
     coords_list = [tuple(map(float, coord)) for coord in nx.get_node_attributes(G, 'pos').values()]
     # Define optimization problem object
@@ -68,7 +68,7 @@ def experiment7():
     board_size = 8  # Increase the size of the chessboard
     
     # Define optimization problem object
-    problem = mlrose.QueensOpt(length=board_size, fitness_fn=fitness, maximize=False)
+    problem = mlrose.QueensOpt(length=board_size, maximize=False)
     return problem
 
 def experiment8():
@@ -94,10 +94,10 @@ def main():
 
     # Define optimization algorithms
     algorithms = {
-        "rhc": (mlrose.RHCRunner, {'experiment_name':'tst', 'seed': 69, 'iteration_list':[100,300,500], 'restart_list':[20,45,70]}),
-        "sa": [mlrose.SARunner, {'experiment_name':'tst', 'seed': 69, 'iteration_list':[100,300,500], 'max_attempts':1000, 'temperature_list':[10, 50, 100]}],
-        "ga": [mlrose.GARunner, {'population_sizes': [20,50,100, 500], 'mutation_rates':[0.1, 0.1, 0.2], 'iteration_list':[100,300,500], 'seed': 69, 'experiment_name': 'tst'}],
-        "mimic": [mlrose.MIMICRunner, {'population_sizes': [20,50,100, 200, 500], 'keep_percent_list':[0.1, 0.15, 0.5,0.65], 'iteration_list':[100,300,500, 500], 'seed': 69, 'experiment_name': 'tst', 'use_fast_mimic':True}]
+        "rhc": (mlrose.RHCRunner, {'experiment_name':'tst', 'seed': 69, 'iteration_list':[100, 500, 1000], 'restart_list':[0, 10, 50]}),
+        "sa": [mlrose.SARunner, {'experiment_name':'tst', 'seed': 69, 'iteration_list':[100, 500, 1000], 'max_attempts':1000, 'temperature_list':[1e10, 1, 10, 50, 100, 250, 500, 1000, 2500, 5000, 10000]}],
+        "ga": [mlrose.GARunner, {'population_sizes': [100, 200], 'mutation_rates':[0.1, 0.3, 0.2], 'iteration_list':[100,300,500, 1000], 'seed': 69, 'experiment_name': 'tst'}],
+        "mimic": [mlrose.MIMICRunner, {'population_sizes': [200, 200], 'keep_percent_list':[0.1, 0.15, 0.5,0.65], 'iteration_list':[100,300,500, 500, 1000], 'seed': 69, 'experiment_name': 'tst', 'use_fast_mimic':True}]
     }
 
     # Loop through problems and algorithms
