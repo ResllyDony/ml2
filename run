@@ -26,14 +26,14 @@ cleanup() {
 trap cleanup SIGINT
 
 # Define the range of experiments and algorithms
-experiment_range=(1 2 3)
+experiment_range=(1 2 3 4 5 6 7 8)
 algorithms=("Random_Hill" "Simulated_Annealing" "Genetic_Algorithm" "MIMIC")
 i=0
 # Loop over experiments and algorithms
 for experiment in "${experiment_range[@]}"; do
     for algorithm in "${algorithms[@]}"; do
         # Run the Python script with the current experiment and algorithm
-        python3 assignment.py -e "$experiment" -a "$algorithm" > run${i}.log & 
+        python3 assignment_pt1.py -e "$experiment" -a "$algorithm" > "experiment${experiment}_${algorithm}.log" & 
         pid=$!
         pids+=("$pid")
         ((i++))
@@ -43,12 +43,21 @@ done
 wait
 
 combined_contents=""
+combined_file="results.out"
 
 # Concatenate log files in numerical order
-for file in $(ls -v run*.log); do
+# Concatenate log files in numerical order
+count=0
+for file in $(ls -v experiment*.log); do
     combined_contents+=$(cat "$file")
-    combined_contents+="\n=====================\n"  # Add divider after each file
+    ((count++))
+    
+    # Check if the count is a multiple of 4
+    if ((count % 4 == 0)); then
+        combined_contents+="\n=====================\n"  # Add divider after each file
+    fi
+    combined_contents+='\n'
 done
-rm -rf result
-echo -e "$combined_contents" > "result"
-rm -rf run*.log
+rm -rf experiment*.log $combined_contents
+echo -e "$combined_contents" > $combined_file
+rm -rf experiment*.log
