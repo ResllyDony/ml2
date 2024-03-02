@@ -1,0 +1,22 @@
+{
+    "ga":{
+        "experiment1":{"population_sizes": [500], "mutation_rates":[ 0.3], "iteration_list":[1000], "seed": 69, "experiment_name": "tst"},
+        "experiment2":{"population_sizes": [ 500], "mutation_rates":[0.2], "iteration_list":[1000], "seed": 69, "experiment_name": "tst"},
+        "experiment3":{"population_sizes": [200], "mutation_rates":[0.2], "iteration_list":[1000], "seed": 69, "experiment_name": "tst"}
+    },
+    "mimic":{
+        "experiment1":{"population_sizes": [ 200], "keep_percent_list":[ 0.5], "iteration_list":[500], "seed": 69, "experiment_name": "tst", "use_fast_mimic":true},    
+        "experiment2":{"population_sizes": [100], "keep_percent_list":[0.5], "iteration_list":[500], "seed": 69, "experiment_name": "tst", "use_fast_mimic":true},  
+        "experiment3":{"population_sizes": [500], "keep_percent_list":[0.65], "iteration_list":[500], "seed": 69, "experiment_name": "tst", "use_fast_mimic":true} 
+    },
+    "rhc":{
+        "experiment1":{"experiment_name":"tst", "seed": 69, "iteration_list":[1000], "restart_list":[47]},
+        "experiment2":{"experiment_name":"tst", "seed": 69, "iteration_list":[1000], "restart_list":[31]},
+        "experiment3":{"experiment_name":"tst", "seed": 69, "iteration_list":[1000], "restart_list":[50]}
+    },
+    "sa":{
+        "experiment1":{"experiment_name":"tst", "seed": 69, "iteration_list":[10000], "max_attempts":1000, "temperature_list":[50]},
+        "experiment2":{"experiment_name":"tst", "seed": 69, "iteration_list":[10000], "max_attempts":1000, "temperature_list":[10000000000.0]},
+        "experiment3":{"experiment_name":"tst", "seed": 69, "iteration_list":[1000], "max_attempts":1000, "temperature_list":[1000]}
+    }
+}

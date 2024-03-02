@@ -1,0 +1,60 @@
+
+=====================================================================
+
+Problem 1: FlipFlopOpt: sa best
+	Algorithm: ga
+Iteration,Fitness,FEvals,Time,Population Size,Mutation Rate,max_iters
+1000,275.0,1045,15.8817205919986,200,0.3,1000
+Problem 1: FlipFlopOpt
+	Algorithm: mimic
+Iteration,Fitness,FEvals,Time,use_fast_mimic,Population Size,Keep Percent,max_iters
+300,251.0,325,66.47797846200046,True,200,0.5,1000
+Problem 1: FlipFlopOpt
+	Algorithm: rhc
+Iteration,Fitness,FEvals,Time,Restarts,max_iters,current_restart
+1000,253.0,50228,668.5457715190023,50,1000,47
+Problem 1: FlipFlopOpt
+	Algorithm: sa
+Iteration,Fitness,FEvals,Time,schedule_type,schedule_init_temp,schedule_decay,schedule_min_temp,schedule_current_value,Temperature,max_iters
+10000,290.0,11595,20.48834408199764,geometric,50.0,0.99,0.001,40.69512336882801,50,10000
+=====================================================================
+
+Problem 2: DiscreteOpt: ga best
+	Algorithm: ga
+Iteration,Fitness,FEvals,Time,Population Size,Mutation Rate,max_iters
+1000,251.0,201312,16.986393196999416,200,0.3,1000
+Problem 2: DiscreteOpt
+	Algorithm: mimic
+Iteration,Fitness,FEvals,Time,use_fast_mimic,Population Size,Keep Percent,max_iters
+100,19.0,20306,24.317586443998152,True,200,0.5,1000
+Problem 2: DiscreteOpt
+	Algorithm: rhc
+Iteration,Fitness,FEvals,Time,Restarts,max_iters,current_restart
+1000,20.0,26674,221.14936390399816,50,1000,31
+Problem 2: DiscreteOpt
+	Algorithm: sa
+Iteration,Fitness,FEvals,Time,schedule_type,schedule_init_temp,schedule_decay,schedule_min_temp,schedule_current_value,Temperature,max_iters
+10000,38.0,19514,24.691261395000765,geometric,10000000000.0,0.99,0.001,7802386304.084981,10000000000.0,10000
+
+=====================================================================
+
+Problem 3: KnapsackOpt: mimic best
+	Algorithm: ga
+Iteration,Fitness,FEvals,Time,Population Size,Mutation Rate,max_iters
+1000,19239.0,201252,14.165006754999922,200,0.2,1000
+Problem 3: KnapsackOpt
+        Algorithm: mimic
+Iteration,  Fitness,  FEvals,  Time,               use_fast_mimic,  Population Size,  Keep Percent,  max_iters
+300,        28065.0,  150860,  72.45380325700012,  True,             500,               0.65,        	1000
+Problem 3: KnapsackOpt
+	Algorithm: rhc
+Iteration,  Fitness,  FEvals,  Time,                Restarts,  max_iters,  current_restart
+500,        16075.0,  19699,   131.73124506700333,  50,        1000,       24
+Problem 3: KnapsackOpt
+	Algorithm: sa
+Iteration,Fitness,FEvals,Time,               schedule_type,schedule_init_temp,schedule_decay,schedule_min_temp,schedule_current_value,Temperature,max_iters
+1000,	  17094.0,1265,  0.4587390950000554,geometric,     1000.0,            0.99,          0.001,            995.4001299831243,     1000,       10000
+=====================================================================
+
+
+

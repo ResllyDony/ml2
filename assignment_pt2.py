@@ -35,84 +35,33 @@ def main():
 
     # Define optimization algorithms
     algorithms = {
-        "rhc": (mlrose.RHCRunner, {'experiment_name':'tst', 'seed': 69, 'iteration_list':[100, 500, 1000], 'restart_list':[0, 10, 50]}),
-        "sa": [mlrose.SARunner, {'experiment_name':'tst', 'seed': 69, 'iteration_list':[100, 500, 1000], 'max_attempts':1000, 'temperature_list':[1e10, 1, 10, 50, 100, 250, 500, 1000, 2500, 5000, 10000]}],
-        "ga": [mlrose.GARunner, {'population_sizes': [100, 200], 'mutation_rates':[0.1, 0.3, 0.2], 'iteration_list':[100,300,500, 1000], 'seed': 69, 'experiment_name': 'tst'}],
-        "mimic": [mlrose.MIMICRunner, {'population_sizes': [200, 200], 'keep_percent_list':[0.1, 0.15, 0.5,0.65], 'iteration_list':[100,300,500, 500, 1000], 'seed': 69, 'experiment_name': 'tst', 'use_fast_mimic':True}]
+        "rhc": (mlrose.random_hill_climb, {'seed': [69], 'iteration_list':[100, 500, 1000], 'restart_list':[0, 10, 50], 'max_iters': [1, 2, 4, 8, 16, 32, 64, 128], 'learning_rate': [0.001, 0.002, 0.003]}),
+        "sa": [mlrose.simulated_annealing, {'seed': [69], 'iteration_list':[100, 500, 1000], 'max_attempts':[1, 1000], 'temperature_list':[1e10, 1, 10, 50, 100, 250, 500, 1000, 2500, 5000, 10000], 'max_iters': [1, 2, 4, 8, 16, 32, 64, 128], 'learning_rate': [0.001, 0.002, 0.003]}],
+        "ga": [mlrose.genetic_alg, {'population_sizes': [100, 200, 500], 'mutation_rates':[0.1, 0.3, 0.2], 'iteration_list':[100,300,500, 1000], 'seed': [69],  'max_iters': [1, 2, 4, 8, 16, 32, 64, 128], 'learning_rate': [0.001, 0.002, 0.003]}],
+        "mimic": [mlrose.mimic, {'population_sizes': [200, 200], 'keep_percent_list':[0.1, 0.15, 0.5,0.65], 'iteration_list':[100,300,500, 500, 1000], 'seed': [69], 'use_fast_mimic':True, 'max_iters': [1, 2, 4, 8, 16, 32, 64, 128], 'learning_rate': [0.001, 0.002, 0.003]}]
     }
 
     #dataset prep
     X_train, X_test, y_train, y_test = genData(args.dataset)
-    #create the NN
-    nn = mlrose.NeuralNetwork(hidden_nodes=[50,70], activation='relu',
-                           algorithm='gradient_descent', max_iters=1000,
-                           bias=True, is_classifier=True, learning_rate=0.001,
-                           early_stopping=True, clip_max=5, max_attempts=100,
-                           random_state=42)
-    input_nodes = np.shape(X_train)[1] + nn.bias
-    if len(np.shape(y_train))==2:
-        output_nodes = np.shape(y_train)[1]
-    else:
-        output_nodes = 1
-    node_list = [input_nodes] + nn.hidden_nodes + [output_nodes]
-    nn.node_list = node_list
-
-    # Define the discretized fitness function
-    def discretized_fitness_function(weights):
-        # Discretize the weights
-        normalized_weights = np.array(weights)
-        min_weight = -0.5
-        max_weight = 0.5
-
-        normalized_weights = min_weight + (max_weight - min_weight) * (normalized_weights / 15)
-                                        
-        nn.fitted_weights = normalized_weights
-        nn.node_list = node_list
-        nn.output_activation = mlrose.sigmoid
-    
-        # Evaluate fitness based on performance
-        fitness = nn.score(X_train, y_train)  # Adjust as needed based on available data
-        
-        return fitness
-    #---------------end fitness function------------------------
-    
-
-    num_nodes = 0
-
-    for i in range(len(node_list) - 1):
-            num_nodes += node_list[i]*node_list[i+1]
-
-    #define the optimization problem
-    fitness = mlrose.NetworkWeights(X_train, y_train, node_list,
-                                 nn.activation_dict[nn.activation],
-                                 nn.bias, nn.is_classifier,
-                                 learning_rate=nn.learning_rate)
-    if args.algo=='MIMIC':
-        problem = mlrose.DiscreteOpt(length=num_nodes, fitness_fn=mlrose.CustomFitness(discretized_fitness_function),
-                             maximize=False, max_val=15)
-    else:
-        problem = mlrose.ContinuousOpt(num_nodes, fitness, maximize=False,
-                                min_val=-1*nn.clip_max,
-                                max_val=nn.clip_max, step=nn.learning_rate)
-    
-    #run optimization with the requested algorithm
-    results = algorithms[args.algo][0](problem, **algorithms[args.algo][1])
-    if len(results)==2:
-        best_weights, current_loss = results
-    else:
-        best_weights, current_loss, _ = results
-
-    #evaluate
-    if args.algo == 'MIMIC':
-        min_weight = -0.5
-        max_weight = 0.5
-
-        best_weights = min_weight + (max_weight - min_weight) * (best_weights / 15)
-    nn.fitted_weights = best_weights
-    nn.output_activation = fitness.get_output_activation()
-    y_test_pred = nn.predict(X_test)
-    test_acc = accuracy_score(y_test, y_test_pred)
-    print("Test Accuracy", test_acc)
+    nnr = mlrose.NNGSRunner(
+        x_train=X_train,
+        y_train=y_train,
+        x_test=X_test,
+        y_test=y_test,
+        experiment_name='nn_test',
+        algorithm=algorithms[args.algo][0],
+        grid_search_parameters=algorithms[args.algo][1],
+        iteration_list=[1, 10, 50, 100, 250, 500, 1000],
+        hidden_layer_sizes=[[10]],
+        bias=True,
+        early_stopping=False,
+        clip_max=1e+10,
+        max_attempts=500,
+        generate_curves=True,
+        seed=69
+    )
+    results = nnr.run()
+    print(results)
 
 if __name__=='__main__':
     main()

@@ -1,0 +1,49 @@
+Problem 1: TSPOpt
+	Algorithm: Random_Hill
+		Best Fitness: 16.47229396431553
+=====================
+Problem 1: TSPOpt
+	Algorithm: Simulated_Annealing
+		Best Fitness: 16.727695027126323
+=====================
+Problem 1: TSPOpt
+	Algorithm: Genetic_Algorithm
+		Best Fitness: 11.009278555957318
+=====================
+Problem 1: TSPOpt
+	Algorithm: MIMIC
+		Best Fitness: 30.92000227119389
+=====================
+Problem 2: DiscreteOpt
+	Algorithm: Random_Hill
+		Best Fitness: 6.0
+=====================
+Problem 2: DiscreteOpt
+	Algorithm: Simulated_Annealing
+		Best Fitness: 26.0
+=====================
+Problem 2: DiscreteOpt
+	Algorithm: Genetic_Algorithm
+		Best Fitness: 100.0
+=====================
+Problem 2: DiscreteOpt
+	Algorithm: MIMIC
+		Best Fitness: 17.0
+=====================
+Problem 3: DiscreteOpt
+	Algorithm: Random_Hill
+		Best Fitness: 6.0
+=====================
+Problem 3: DiscreteOpt
+	Algorithm: Simulated_Annealing
+		Best Fitness: 26.0
+=====================
+Problem 3: DiscreteOpt
+	Algorithm: Genetic_Algorithm
+		Best Fitness: 100.0
+=====================
+Problem 3: DiscreteOpt
+	Algorithm: MIMIC
+		Best Fitness: 17.0
+=====================
+
